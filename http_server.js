@@ -19,11 +19,17 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 
 // init the data store
-db.defaults({ users: [] }).write();
+db.defaults({ users: [], accounts: [] }).write();
 
-// return all users
+// return all users & accounts
 app.get("/data", function (req, res) {
   res.send(db.get("users").value());
+  res.send(db.get("accounts").value());
+});
+
+// return all users
+app.get("/accounts", function (req, res) {
+  res.send(db.get("accounts").value());
 });
 
 // add user
@@ -44,6 +50,18 @@ app.post("/add", function (req, res) {
   db.get("users").push(user).write();
   console.log(db.get("users").value());
   res.send(db.get("users").value());
+});
+
+// add user
+app.post("/accounts", function (req, res) {
+  var user = {
+    email: req.body.email,
+    username: req.body.username,
+    password: req.body.password,
+  };
+  db.get("accounts").push(user).write();
+  console.log(db.get("accounts").value());
+  res.send(db.get("accounts").value());
 });
 
 // start server
